@@ -33,10 +33,14 @@ def send_mail(username, password, from_addr, to_addrs, msg):
 @app.route('/readxlsx', methods=['POST'])
 def upload_file():
 	if request.method == 'POST':
+		response = {}
+		response['email_sent'] = []
+		response['email_notsent'] = []
+
 		file = request.files['file']
 		if file.filename == '':
-			flash('No file selected')
-			return redirect(request.url)
+			response["message"] = "No file selected"
+			return response
 		if file and allowed_file(file.filename):
 			#reading uploads excel file
 			read_excel = pd.read_excel(file)
@@ -63,12 +67,16 @@ def upload_file():
 
 				try:
 					send_mail(username, password, username, to_addr, msg)
-					flash("Email successfully sent to", to_addr)
+					response["email_sent"].append(to_addr)
 				except Exception:
-					print('Exception')
-					flash("Email not sent to", to_addr)
+					response["email_notsent"].append(to_addr)
 
-		return render_template('success.html', value=email_list)
+			return response	
+
+		else:
+			response["message"] = "Please upload excel sheet only"
+			return response
+
 
 if __name__ == "__main__":
 	app.run(debug=True)

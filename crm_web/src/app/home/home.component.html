@@ -1,3 +1,14 @@
-<p>
-  home works!
-</p>
+<!-- Page Content -->
+<div class="container">
+  <div class="card border-0 shadow my-5">
+    <div class="card-body p-5">
+      <h1 class="font-weight-light">Upload excel file</h1>
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+          <input type="file" name="file" (change)="onFileChange($event)" />
+          <button type="submit">Upload</button>
+      
+        </form>
+    </div>
+  </div>
+</div>
